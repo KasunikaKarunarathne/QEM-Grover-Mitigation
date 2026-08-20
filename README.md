@@ -2,16 +2,16 @@
 
 This repository contains the implementation, datasets, and experimental results for a novel Machine Learning-based Quantum Error Mitigation (ML-QEM) framework designed to improve the execution fidelity of Grover's Algorithm on noisy quantum hardware. The study compares two distinct physical backends: IBM Quantum cloud devices (Superconducting Qubits) and SpinQ Triangulum (NMR Qubits).
 
-## 🎯 Our Goal
+## Our Goal
 Quantum computers are highly susceptible to noise, which degrades the performance of deep quantum circuits like those required for Grover's search algorithm. The primary goal of this project is to develop and validate a scalable Machine Learning-based Quantum Error Mitigation (ML-QEM) pipeline that can learn hardware-specific noise profiles and mitigate errors without the massive circuit overhead required by traditional QEM techniques (such as ZNE or PEC).
 
-## 🚀 What We Achieved
+## What We Achieved
 - **Two-Tower Neural Network Architecture**: Developed a custom Two-Tower model that fuses circuit features (depth, gate counts, topological structure) with hardware fingerprints (T1/T2 times, readout errors) to predict noise-free expectation values.
 - **Cross-Platform Validation**: Successfully deployed and evaluated the ML-QEM pipeline on both **IBM Quantum (Superconducting)** and **SpinQ Triangulum (NMR)** platforms.
 - **Significant Fidelity Improvements**: Demonstrated substantial reductions in error rates compared to unmitigated execution on physical hardware, specifically tailored for the highly structured oracle and diffusion operators in Grover's Algorithm.
 - **Automated Dataset Generation**: Created a robust pipeline to generate diverse training datasets (`spinq_dataset_gen.py`) and extract hardware fingerprints dynamically.
 
-## 📂 Project Structure (What's Included)
+## Project Structure (What's Included)
 
 * **`notebooks/`**: Interactive Jupyter notebooks detailing the QEM pipelines and experimental workflows.
   * `1_Grover_Error_Mitigation.ipynb`: The core implementation of Grover's algorithm with preliminary noise analysis.
@@ -26,10 +26,10 @@ Quantum computers are highly susceptible to noise, which degrades the performanc
   * `spiqit_simulation.py`: Utility for simulating circuits using the SpinQ environment.
   * `test_connection.py`: Basic script to test connection to the quantum backend.
 
-## 🔗 Code Availability
+## Code Availability
 This repository is publicly released in conjunction with our research paper to ensure full reproducibility and transparency. All model architectures, dataset generators, and analysis notebooks are provided to allow independent verification of our findings.
 
-## 🛠️ Getting Started
+## Getting Started
 1. Clone the repository: `git clone https://github.com/KasunikaKarunarathne/QEM-Grover-Mitigation.git`
 2. Install the required dependencies (Qiskit, PyTorch, etc.).
 3. Navigate to the `notebooks/` directory and open the relevant pipeline notebook to reproduce the results.
