@@ -1,35 +1,145 @@
-# Machine Learning-Based Quantum Error Mitigation for Grover's Algorithm
+# Cross-Platform Machine Learning Quantum Error Mitigation (ML-QEM) for Grover's Algorithm
 
-This repository contains the implementation, datasets, and experimental results for a novel Machine Learning-based Quantum Error Mitigation (ML-QEM) framework designed to improve the execution fidelity of Grover's Algorithm on noisy quantum hardware. The study compares two distinct physical backends: IBM Quantum cloud devices (Superconducting Qubits) and SpinQ Triangulum (NMR Qubits).
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Qiskit](https://img.shields.io/badge/Qiskit-Supported-purple.svg)](https://qiskit.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
 
-## Our Goal
-Quantum computers are highly susceptible to noise, which degrades the performance of deep quantum circuits like those required for Grover's search algorithm. The primary goal of this project is to develop and validate a scalable Machine Learning-based Quantum Error Mitigation (ML-QEM) pipeline that can learn hardware-specific noise profiles and mitigate errors without the massive circuit overhead required by traditional QEM techniques (such as ZNE or PEC).
+This repository contains the implementation, datasets, and experimental evaluation for our research paper:  
+**"Cross-Platform Machine Learning Quantum Error Mitigation (ML-QEM) for Grover's Algorithm: A Comparative Study between Superconducting and NMR Architectures"**.
 
-## What We Achieved
-- **Two-Tower Neural Network Architecture**: Developed a custom Two-Tower model that fuses circuit features (depth, gate counts, topological structure) with hardware fingerprints (T1/T2 times, readout errors) to predict noise-free expectation values.
-- **Cross-Platform Validation**: Successfully deployed and evaluated the ML-QEM pipeline on both **IBM Quantum (Superconducting)** and **SpinQ Triangulum (NMR)** platforms.
-- **Significant Fidelity Improvements**: Demonstrated substantial reductions in error rates compared to unmitigated execution on physical hardware, specifically tailored for the highly structured oracle and diffusion operators in Grover's Algorithm.
-- **Automated Dataset Generation**: Created a robust pipeline to generate diverse training datasets (`spinq_dataset_gen.py`) and extract hardware fingerprints dynamically.
+---
 
-## Project Structure (What's Included)
+## 💡 The Core Idea (In Plain English)
 
-* **`notebooks/`**: Interactive Jupyter notebooks detailing the QEM pipelines and experimental workflows.
-  * `1_Grover_Error_Mitigation.ipynb`: The core implementation of Grover's algorithm with preliminary noise analysis.
-  * `2_ML_QEM_Pipeline_IBM.ipynb`: The complete ML-QEM pipeline optimized and trained for IBM Quantum superconducting devices.
-  * `3_ML_QEM_Pipeline_NMR.ipynb`: The adapted ML-QEM pipeline for the SpinQ NMR platform, handling its unique decoherence characteristics.
-* **`data/`**: Datasets, hardware fingerprints, and model weights collected during execution.
-  * `ibm_cloud_data/`: PyTorch model weights (`.pt`) and NumPy arrays (`.npy`) containing Choi matrices and target values specific to the IBM Quantum environment.
-  * `nmr_data/`: Experimental datasets (`spinq_dataset.csv`), normalized statistics, model weights (`.pth`), and inference results from SpinQ Triangulum.
-  * `simulation_data/`: Base datasets, loss curves, error vs. depth plots, and other evaluation metrics.
-* **`scripts/`**: Supporting Python scripts for automation and hardware interaction.
-  * `spinq_dataset_gen.py` & `spinq_dataset_gen_extended.py`: Scripts for generating training data by executing randomized circuits and collecting hardware execution statistics.
-  * `spiqit_simulation.py`: Utility for simulating circuits using the SpinQ environment.
-  * `test_connection.py`: Basic script to test connection to the quantum backend.
+Today's quantum computers (NISQ devices) are inherently noisy. As quantum algorithms grow deeper—like **Grover's search algorithm** with repeated oracle and diffusion cycles—physical noise rapidly scrambles quantum information into pure randomness.
 
-## Code Availability
-This repository is publicly released in conjunction with our research paper to ensure full reproducibility and transparency. All model architectures, dataset generators, and analysis notebooks are provided to allow independent verification of our findings.
+Traditional Quantum Error Mitigation (like ZNE or PEC) helps, but requires running thousands of extra quantum circuits on physical hardware, creating massive queue times and sampling costs.
 
-## Getting Started
-1. Clone the repository: `git clone https://github.com/KasunikaKarunarathne/QEM-Grover-Mitigation.git`
-2. Install the required dependencies (Qiskit, PyTorch, etc.).
-3. Navigate to the `notebooks/` directory and open the relevant pipeline notebook to reproduce the results.
+**Our Solution:**  
+We introduce a **Two-Tower Neural Network** that acts as an intelligent, instantaneous classical post-processor:
+1. **Zero-QPU Training Overhead:** Instead of burning expensive quantum hardware time to collect training data, we characterize the hardware's noise **just once** using a mathematical fingerprint called the **Choi Matrix**.
+2. **Synthetic Physics-Preserving Augmentation:** During offline training on a classical computer, we dynamically fluctuate this noise fingerprint using a technique that strictly obeys quantum mechanics (CPTP preservation). This teaches the neural network how real hardware drifts over time at **zero hardware cost**.
+3. **Safe Bounded Corrections:** The model predicts a corrective offset $\Delta_{mit}$ constrained by physical safety bounds, mathematically guaranteeing the final answer can never exceed physical quantum limits ($[-1, 1]$).
+4. **Instant Classical Post-Processing:** During live execution, noisy measurements from real QPUs are corrected in milliseconds with zero extra quantum shots.
+
+---
+
+## 🗺️ High-Level System Architecture
+
+```mermaid
+flowchart TD
+    subgraph Phase1 ["1. One-Time Hardware Calibration"]
+        HW["Physical Quantum Hardware<br/>(IBM Kingston / SpinQ Gemini)"]
+        QPT["Quantum Process Tomography (QPT)"]
+        CHOI["576D Choi Noise Fingerprint<br/>(Basis Gates: H, X, CZ)"]
+        HW -->|Run Basis Gates| QPT
+        QPT -->|Choi Isomorphism| CHOI
+    end
+
+    subgraph Phase2 ["2. Zero-QPU Classical Training (Offline)"]
+        AUG["CPTP Synthetic Data Augmentation<br/>(Simulates Realistic Drift)"]
+        CIRCUITS["500 Diverse Quantum Circuits<br/>(Grover & Random Subroutines)"]
+        SIM["Classical Statevector Simulation<br/>(Ideal Ground Truth Target)"]
+        TOWER_A["Tower A: Circuit Topology (8D)<br/>Dense(16) + SiLU -> 16D Latent"]
+        TOWER_B["Tower B: Hardware Physics (576D)<br/>Dense(4) + Tanh -> 4D Latent"]
+        FUSION["Latent Feature Fusion (20D)<br/>Dense(8) + SiLU -> Raw Scalar"]
+        BOUNDED["Safe Bounded Residual Head<br/>Output Clamped to [-1, 1]"]
+
+        CHOI -->|Offline Input| AUG
+        AUG --> TOWER_B
+        CIRCUITS --> TOWER_A
+        CIRCUITS --> SIM
+        TOWER_A --> FUSION
+        TOWER_B --> FUSION
+        FUSION --> BOUNDED
+    end
+
+    subgraph Phase3 ["3. Fast Live Inference (Post-Processing)"]
+        TARGET["Target Grover Circuit"]
+        RUN["Execute on Physical QPU"]
+        RAW["Noisy Raw Measurement (E_raw)"]
+        MODEL["Trained ML-QEM Model"]
+        MIT["Clean Mitigated Expectation (E_mit)<br/>34% Error Cut (IBM) / 28.8% (NMR)"]
+
+        TARGET --> RUN
+        RUN --> RAW
+        RAW --> MODEL
+        BOUNDED -.->|Model Weights| MODEL
+        MODEL -->|Instant Correction| MIT
+    end
+```
+
+---
+
+## 🔬 Cross-Platform Empirical Highlights
+
+We benchmarked the pipeline across two fundamentally different physical computing paradigms exhibiting an initial **$\sim$200-fold noise disparity**:
+
+| Benchmark Dimension | IBM Kingston (Superconducting) | SpinQ Gemini (Liquid-State NMR) |
+| :--- | :--- | :--- |
+| **Qubit Modality** | 127-Qubit Cryogenic Transmons (~15 mK) | 2-Qubit Room-Temperature NMR ($^1$H and $^{31}$P) |
+| **Primary Noise Source** | Microwave cross-talk, pulse miscalibrations | Severe phase damping ($T_2$) from slow J-coupling (~800 $\mu$s) |
+| **Pre-Mitigation Raw MSE** | 0.00048 | 0.09610 (~200x noisier) |
+| **Mitigation Bound ($\alpha$)** | $\alpha = 0.2$ (tightly constrained) | $\alpha = 1.0$ (expanded for severe dephasing) |
+| **Error Reduction (Unseen Test)** | **34.0%** error reduction ($p < 10^{-6}$) | **28.8%** error reduction ($p = 0.000510$) |
+| **Live Real-Time Hardware Inference** | Robust depth generalization across layers | Raw MAE **0.2830 $\to$ 0.0003** ($p = 0.000001$) |
+
+*Statistical significance verified using the non-parametric Wilcoxon Signed-Rank Test across non-overlapping circuit distributions.*
+
+---
+
+## 📂 Project Structure
+
+```text
+├── notebooks/
+│   ├── 1_Grover_Error_Mitigation.ipynb    # Core Grover's algorithm & noise baseline analysis
+│   ├── 2_ML_QEM_Pipeline_IBM.ipynb        # Complete Two-Tower pipeline for IBM Superconducting QPU
+│   └── 3_ML_QEM_Pipeline_NMR.ipynb        # Adapted ML-QEM pipeline for SpinQ Gemini NMR QPU
+├── data/
+│   ├── ibm_cloud_data/                    # Choi matrices (.npy) and trained model weights (.pt)
+│   ├── nmr_data/                          # SpinQ dataset (.csv), Choi fingerprints, and live inference runs
+│   └── simulation_data/                   # Loss curves, validation splits, and metric plots
+├── scripts/
+│   ├── spinq_dataset_gen.py               # Robust remote execution wrapper for SpinQ cloud QPU
+│   ├── spinq_dataset_gen_extended.py      # Extended dataset generator for out-of-distribution depths
+│   ├── spiqit_simulation.py               # SpinQ local simulator integration
+│   └── test_connection.py                 # Remote backend health-check utility
+└── README.md
+```
+
+---
+
+## 🛠️ Getting Started
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/KasunikaKarunarathne/QEM-Grover-Mitigation.git
+cd QEM-Grover-Mitigation
+```
+
+### 2. Environment Setup
+```bash
+conda create -n ml-qem python=3.10 -y
+conda activate ml-qem
+pip install torch torchvision numpy scipy pandas matplotlib qiskit qiskit-aer
+```
+
+### 3. Reproducing the Experiments
+Open the respective Jupyter notebooks in `notebooks/`:
+- Run `2_ML_QEM_Pipeline_IBM.ipynb` to inspect IBM Kingston data, training with CPTP augmentation, and test evaluations.
+- Run `3_ML_QEM_Pipeline_NMR.ipynb` to evaluate the SpinQ Gemini NMR dephasing mitigation and live QPU deployment results.
+
+---
+
+## 📜 Citation & Code Availability
+The code and datasets in this repository accompany our research paper. If you utilize this framework or datasets in your research, please cite:
+
+```bibtex
+@article{karunarathne2026crossplatform,
+  title={Cross-Platform Machine Learning Quantum Error Mitigation (ML-QEM) for Grover's Algorithm: A Comparative Study between Superconducting and NMR Architectures},
+  author={Karunarathne, Nethmini and Mahasinghe, Anuradha},
+  journal={CLEI Electronic Journal},
+  year={2026}
+}
+```

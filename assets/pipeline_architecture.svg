@@ -1,0 +1,256 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1160 520" width="100%" height="100%">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="phase1Grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#EFF6FF" />
+      <stop offset="100%" stop-color="#DBEAFE" />
+    </linearGradient>
+    <linearGradient id="phase2Grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F8FAFC" />
+      <stop offset="100%" stop-color="#F1F5F9" />
+    </linearGradient>
+    <linearGradient id="phase3Grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ECFDF5" />
+      <stop offset="100%" stop-color="#D1FAE5" />
+    </linearGradient>
+
+    <linearGradient id="towerAGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#1D4ED8" />
+    </linearGradient>
+    <linearGradient id="towerBGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#8B5CF6" />
+      <stop offset="100%" stop-color="#6D28D9" />
+    </linearGradient>
+    <linearGradient id="fusionGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+    <linearGradient id="outputGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+
+    <!-- Filters for drop shadows -->
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0F172A" flood-opacity="0.08" />
+    </filter>
+    <filter id="softGlow" x="-10%" y="-10%" width="120%" height="120%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.05" />
+    </filter>
+
+    <!-- Arrow markers -->
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB" />
+    </marker>
+    <marker id="arrowGray" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748B" />
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#059669" />
+    </marker>
+  </defs>
+
+  <style>
+    .phase-title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+    .node-title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; fill: #0F172A; }
+    .node-desc { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 11px; fill: #475569; }
+    .badge-text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; fill: #FFFFFF; }
+    .code-text { font-family: "JetBrains Mono", "SF Mono", Consolas, monospace; font-size: 11px; font-weight: 600; }
+    .edge-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 10px; font-weight: 600; fill: #64748B; }
+  </style>
+
+  <!-- Background Canvas -->
+  <rect x="0" y="0" width="1160" height="520" rx="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" />
+
+  <!-- ==================== PHASE 1: HARDWARE FINGERPRINTING ==================== -->
+  <g transform="translate(20, 20)">
+    <rect x="0" y="0" width="280" height="480" rx="10" fill="url(#phase1Grad)" stroke="#BFDBFE" stroke-width="1.5" />
+    <text x="18" y="32" class="phase-title" fill="#1E40AF">1. One-Time Hardware Calibration</text>
+    <text x="18" y="48" class="node-desc" fill="#1E3A8A">Executed only once per platform (0 QPU waste)</text>
+
+    <!-- Box 1: Physical QPU -->
+    <g transform="translate(18, 70)" filter="url(#cardShadow)">
+      <rect x="0" y="0" width="244" height="95" rx="8" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.5" />
+      <rect x="12" y="12" width="26" height="26" rx="6" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1" />
+      <text x="21" y="29" font-size="14">⚛️</text>
+      <text x="48" y="24" class="node-title">Physical Quantum Hardware</text>
+      <text x="48" y="38" class="node-desc">Target NISQ Backends</text>
+      
+      <rect x="14" y="48" width="102" height="20" rx="4" fill="#DBEAFE" />
+      <text x="20" y="62" class="code-text" fill="#1E40AF">IBM Kingston</text>
+      
+      <rect x="124" y="48" width="106" height="20" rx="4" fill="#DBEAFE" />
+      <text x="130" y="62" class="code-text" fill="#1E40AF">SpinQ Gemini</text>
+      <text x="14" y="82" class="node-desc">Cryogenic Transmon vs. Liquid NMR</text>
+    </g>
+
+    <!-- Arrow down -->
+    <path d="M 140 165 L 140 195" stroke="#2563EB" stroke-width="2" marker-end="url(#arrowBlue)" />
+    <text x="148" y="184" class="edge-label">Run Basis Gates</text>
+
+    <!-- Box 2: Quantum Process Tomography -->
+    <g transform="translate(18, 200)" filter="url(#cardShadow)">
+      <rect x="0" y="0" width="244" height="85" rx="8" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.5" />
+      <rect x="12" y="12" width="26" height="26" rx="6" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1" />
+      <text x="20" y="29" font-size="14">🔬</text>
+      <text x="48" y="24" class="node-title">Quantum Process Tomography</text>
+      <text x="48" y="38" class="node-desc">Full quantum channel mapping</text>
+      <text x="14" y="58" class="node-desc">• Characterize basis gates: H, X, CZ</text>
+      <text x="14" y="73" class="node-desc">• Reconstruct Kraus channel operators</text>
+    </g>
+
+    <!-- Arrow down -->
+    <path d="M 140 285 L 140 315" stroke="#2563EB" stroke-width="2" marker-end="url(#arrowBlue)" />
+    <text x="148" y="304" class="edge-label">Choi Isomorphism</text>
+
+    <!-- Box 3: Choi Matrix Fingerprint -->
+    <g transform="translate(18, 320)" filter="url(#cardShadow)">
+      <rect x="0" y="0" width="244" height="135" rx="8" fill="#FFFFFF" stroke="#3B82F6" stroke-width="2" />
+      <rect x="12" y="12" width="26" height="26" rx="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="1" />
+      <text x="21" y="29" font-size="14">📋</text>
+      <text x="48" y="24" class="node-title">576D Choi Noise Fingerprint</text>
+      <text x="48" y="38" class="node-desc">Algebraic Noise Signature (Λ_hw)</text>
+      <rect x="14" y="48" width="216" height="42" rx="4" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1" />
+      <text x="22" y="64" class="code-text" fill="#0F172A">H Gate (32D) + X Gate (32D)</text>
+      <text x="22" y="80" class="code-text" fill="#0F172A">+ CZ Entangling Gate (512D)</text>
+      <text x="14" y="106" class="node-desc">Completely captures unitary errors,</text>
+      <text x="14" y="121" class="node-desc">cross-talk, and T1/T2 decoherence.</text>
+    </g>
+  </g>
+
+  <!-- Arrow between Phase 1 and Phase 2 -->
+  <path d="M 300 405 L 340 405" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrowBlue)" />
+  <text x="303" y="395" class="edge-label" fill="#1D4ED8">Choi Vector</text>
+
+  <!-- ==================== PHASE 2: OFFLINE TRAINING ==================== -->
+  <g transform="translate(340, 20)">
+    <rect x="0" y="0" width="490" height="480" rx="10" fill="url(#phase2Grad)" stroke="#CBD5E1" stroke-width="1.5" />
+    <text x="20" y="32" class="phase-title" fill="#334155">2. Zero-QPU Classical Training (Two-Tower Architecture)</text>
+    <text x="20" y="48" class="node-desc" fill="#475569">Trained purely on classical CPU/GPU using synthetic CPTP noise augmentation</text>
+
+    <!-- Synthetic Augmentation Badge -->
+    <g transform="translate(245, 65)" filter="url(#softGlow)">
+      <rect x="0" y="0" width="225" height="55" rx="6" fill="#F5F3FF" stroke="#A78BFA" stroke-width="1.5" />
+      <text x="10" y="20" class="node-title" fill="#5B21B6">CPTP Synthetic Data Augmentation</text>
+      <text x="10" y="35" class="node-desc" fill="#6D28D9">Convex Identity Mixture: Λ_perturbed</text>
+      <text x="10" y="48" class="node-desc" fill="#4B5563">Simulates temporal drift with 0 QPU calls</text>
+    </g>
+
+    <!-- Dataset Box -->
+    <g transform="translate(18, 65)" filter="url(#cardShadow)">
+      <rect x="0" y="0" width="205" height="55" rx="6" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.2" />
+      <text x="10" y="20" class="node-title">500 Benchmark Circuits</text>
+      <text x="10" y="34" class="node-desc">80% Random basis gate subroutines</text>
+      <text x="10" y="47" class="node-desc">20% Grover structured search instances</text>
+    </g>
+
+    <!-- Tower A: Circuit Processor -->
+    <g transform="translate(18, 145)" filter="url(#cardShadow)">
+      <rect x="0" y="0" width="215" height="150" rx="8" fill="#FFFFFF" stroke="#60A5FA" stroke-width="1.5" />
+      <rect x="0" y="0" width="215" height="28" rx="8" fill="url(#towerAGrad)" />
+      <text x="12" y="19" class="badge-text">Tower A: Circuit Topology (8D)</text>
+      
+      <text x="12" y="46" class="node-desc">• Depth, H-count, CZ-count, X-count</text>
+      <text x="12" y="60" class="node-desc">• 1Q &amp; 2Q Gate totals, Width, Raw Obs</text>
+      
+      <rect x="12" y="72" width="191" height="30" rx="4" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1" />
+      <text x="18" y="86" class="code-text" fill="#1D4ED8">Dense(16) + BatchNorm + SiLU</text>
+      <text x="18" y="98" class="node-desc">Dimensionality expansion (8D → 16D)</text>
+
+      <rect x="12" y="110" width="191" height="28" rx="4" fill="#DBEAFE" />
+      <text x="25" y="128" class="node-title" fill="#1E40AF">Circuit Latent Vector (z_c) 16D</text>
+    </g>
+
+    <!-- Tower B: Hardware Processor -->
+    <g transform="translate(255, 145)" filter="url(#cardShadow)">
+      <rect x="0" y="0" width="215" height="150" rx="8" fill="#FFFFFF" stroke="#C084FC" stroke-width="1.5" />
+      <rect x="0" y="0" width="215" height="28" rx="8" fill="url(#towerBGrad)" />
+      <text x="12" y="19" class="badge-text">Tower B: Hardware Physics (576D)</text>
+
+      <text x="12" y="46" class="node-desc">• Ingests dynamic Choi matrix</text>
+      <text x="12" y="60" class="node-desc">• Captures non-Markovian noise drift</text>
+
+      <rect x="12" y="72" width="191" height="30" rx="4" fill="#FAF5FF" stroke="#E9D5FF" stroke-width="1" />
+      <text x="18" y="86" class="code-text" fill="#6D28D9">Dense(4) + Tanh Bottleneck</text>
+      <text x="18" y="98" class="node-desc">Non-linear PCA compression (576D → 4D)</text>
+
+      <rect x="12" y="110" width="191" height="28" rx="4" fill="#F3E8FF" />
+      <text x="20" y="128" class="node-title" fill="#6B21A8">Hardware Latent (z_h) 4D</text>
+    </g>
+
+    <!-- Connectors to Fusion -->
+    <path d="M 125 295 L 125 320 L 220 320" stroke="#3B82F6" stroke-width="2" marker-end="url(#arrowBlue)" />
+    <path d="M 360 295 L 360 320 L 265 320" stroke="#8B5CF6" stroke-width="2" marker-end="url(#arrowGray)" />
+
+    <!-- Fusion Layer -->
+    <g transform="translate(75, 330)" filter="url(#cardShadow)">
+      <rect x="0" y="0" width="340" height="42" rx="6" fill="#FFFBEB" stroke="#FBBF24" stroke-width="1.5" />
+      <text x="14" y="19" class="node-title" fill="#B45309">Latent Space Fusion Layer (20D = 16D + 4D)</text>
+      <text x="14" y="34" class="node-desc" fill="#78350F">Dense(8) + SiLU + Dropout → Raw scalar offset (O_raw)</text>
+    </g>
+
+    <!-- Arrow to Bounded Residual -->
+    <path d="M 245 372 L 245 395" stroke="#F59E0B" stroke-width="2" marker-end="url(#arrowGray)" />
+
+    <!-- Bounded Residual Box -->
+    <g transform="translate(50, 400)" filter="url(#cardShadow)">
+      <rect x="0" y="0" width="390" height="68" rx="8" fill="#FEF2F2" stroke="#EF4444" stroke-width="1.5" />
+      <text x="14" y="20" class="node-title" fill="#B91C1C">🛡️ Safe Bounded Residual Head</text>
+      <text x="14" y="37" class="code-text" fill="#991B1B">Δ_mit = α · tanh(O_raw)   |   E_mit = clamp(E_raw + Δ_mit, -1, 1)</text>
+      <text x="14" y="56" class="node-desc" fill="#7F1D1D">Mathematically guarantees prediction NEVER exceeds physical Pauli bounds [-1, 1]</text>
+    </g>
+  </g>
+
+  <!-- Arrow between Phase 2 and Phase 3 -->
+  <path d="M 830 260 L 870 260" stroke="#059669" stroke-width="2.5" marker-end="url(#arrowGreen)" />
+  <text x="833" y="250" class="edge-label" fill="#047857">Trained Model</text>
+
+  <!-- ==================== PHASE 3: LIVE INFERENCE ==================== -->
+  <g transform="translate(870, 20)">
+    <rect x="0" y="0" width="270" height="480" rx="10" fill="url(#phase3Grad)" stroke="#A7F3D0" stroke-width="1.5" />
+    <text x="18" y="32" class="phase-title" fill="#065F46">3. Instant Live Inference</text>
+    <text x="18" y="48" class="node-desc" fill="#047857">Post-processing execution (&lt; 1 ms)</text>
+
+    <!-- Step 1: Run Circuit -->
+    <g transform="translate(15, 70)" filter="url(#cardShadow)">
+      <rect x="0" y="0" width="240" height="85" rx="8" fill="#FFFFFF" stroke="#6EE7B7" stroke-width="1.5" />
+      <text x="12" y="22" class="node-title">1. Deploy Target Circuit</text>
+      <text x="12" y="38" class="node-desc">Execute Grover's Algorithm on QPU</text>
+      <rect x="12" y="48" width="216" height="26" rx="4" fill="#F0FDF4" stroke="#BBF7D0" stroke-width="1" />
+      <text x="20" y="65" class="code-text" fill="#065F46">Output: Raw Noisy E_raw</text>
+    </g>
+
+    <!-- Arrow down -->
+    <path d="M 135 155 L 135 185" stroke="#059669" stroke-width="2" marker-end="url(#arrowGreen)" />
+    <text x="142" y="174" class="edge-label">Feed E_raw</text>
+
+    <!-- Step 2: Model Inference -->
+    <g transform="translate(15, 190)" filter="url(#cardShadow)">
+      <rect x="0" y="0" width="240" height="95" rx="8" fill="#FFFFFF" stroke="#6EE7B7" stroke-width="1.5" />
+      <text x="12" y="22" class="node-title">2. Model Post-Processing</text>
+      <text x="12" y="38" class="node-desc">Evaluates circuit &amp; Choi matrix</text>
+      <text x="12" y="55" class="node-desc">• Classical millisecond forward pass</text>
+      <text x="12" y="70" class="node-desc">• Zero quantum shot overhead</text>
+      <text x="12" y="85" class="code-text" fill="#047857">Calculates correction Δ_mit</text>
+    </g>
+
+    <!-- Arrow down -->
+    <path d="M 135 285 L 135 315" stroke="#059669" stroke-width="2" marker-end="url(#arrowGreen)" />
+    <text x="142" y="304" class="edge-label">Add Offset</text>
+
+    <!-- Step 3: Mitigated Result -->
+    <g transform="translate(15, 320)" filter="url(#cardShadow)">
+      <rect x="0" y="0" width="240" height="135" rx="8" fill="#FFFFFF" stroke="#059669" stroke-width="2" />
+      <rect x="0" y="0" width="240" height="28" rx="8" fill="url(#outputGrad)" />
+      <text x="12" y="19" class="badge-text">3. Clean Expectation (E_mit)</text>
+      
+      <text x="12" y="48" class="node-title" fill="#065F46">Proven Real-World Gains:</text>
+      <text x="12" y="68" class="node-desc">🔹 <tspan font-weight="700">IBM Kingston:</tspan> 34.0% Error Cut</text>
+      <text x="24" y="82" class="edge-label">(Wilcoxon p &lt; 10⁻⁶)</text>
+      <text x="12" y="100" class="node-desc">🔹 <tspan font-weight="700">SpinQ NMR:</tspan> 28.8% Error Cut</text>
+      <text x="24" y="114" class="edge-label">Live MAE: 0.2830 → 0.0003</text>
+      <text x="12" y="130" class="code-text" fill="#047857">Guaranteed in [-1.0, +1.0]</text>
+    </g>
+  </g>
+</svg>
