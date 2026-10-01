@@ -50,6 +50,13 @@ flowchart TD
     end
 ```
 
+### 📐 Detailed Architecture & Pipeline Flow
+For deeper technical insight into the latent space dimensions, non-linear activation bottlenecks, and bounded residual formulation, see the architecture schema below:
+
+<p align="center">
+  <img src="assets/pipeline_architecture.svg" alt="ML-QEM Detailed Pipeline Architecture" width="100%" />
+</p>
+
 ---
 
 ## 🔬 Cross-Platform Empirical Highlights
