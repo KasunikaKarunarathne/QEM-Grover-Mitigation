@@ -17,7 +17,7 @@ Today's quantum computers (NISQ devices) are inherently noisy. As quantum algori
 Traditional Quantum Error Mitigation (like ZNE or PEC) helps, but requires running thousands of extra quantum circuits on physical hardware, creating massive queue times and sampling costs.
 
 **Our Solution:**  
-We introduce a **Two-Tower Neural Network** that acts as an intelligent, instantaneous classical post-processor:
+We introduce a **Two-Tower Bounded Residual Neural Network (ResNet)** that acts as an intelligent, instantaneous classical post-processor:
 1. **Zero-QPU Training Overhead:** Instead of burning expensive quantum hardware time to collect training data, we characterize the hardware's noise **just once** using a mathematical fingerprint called the **Choi Matrix**.
 2. **Synthetic Physics-Preserving Augmentation:** During offline training on a classical computer, we dynamically fluctuate this noise fingerprint using a technique that strictly obeys quantum mechanics (CPTP preservation). This teaches the neural network how real hardware drifts over time at **zero hardware cost**.
 3. **Safe Bounded Corrections:** The model predicts a corrective offset $\Delta_{mit}$ constrained by physical safety bounds, mathematically guaranteeing the final answer can never exceed physical quantum limits ($[-1, 1]$).
@@ -56,6 +56,22 @@ For deeper technical insight into the latent space dimensions, non-linear activa
 <p align="center">
   <img src="assets/pipeline_architecture.svg" alt="ML-QEM Detailed Pipeline Architecture" width="100%" />
 </p>
+
+---
+
+## 🧠 Why a Residual Architecture (ResNet)?
+
+A naive regression neural network attempts to predict the clean quantum observable from scratch: $\hat{E} = f(\text{circuit})$. In quantum computing, this direct approach is disastrous—uninitialized networks hallucinate, producing nonsensical errors (e.g. $-1400\%$ error) and non-physical values outside the allowed Pauli range $[-1, 1]$.
+
+To solve this, our model is explicitly architected as a **Residual Neural Network (ResNet)**:
+
+$$\hat{E}_{mit} = \text{clamp}\Big(E_{raw} + \Delta_{mit},\ -1.0,\ 1.0\Big) \quad \text{where} \quad \Delta_{mit} = \alpha \cdot \tanh\big(f(C_{features}, \Lambda_{hw})\big)$$
+
+### Why this design is essential:
+1. **Direct Skip Connection from Physical Hardware ($E_{raw}$):** The noisy measurement $E_{raw}$ is already an approximation of the true observable, corrupted by physical noise $\epsilon$. By routing $E_{raw}$ directly to the output via a skip connection, the neural network does not need to learn the underlying quantum state from scratch—it only learns the **residual noise offset** ($\Delta_{mit} \approx -\epsilon$).
+2. **Safe Identity Initialization ("First, Do No Harm"):** The output layer weights are initialized near zero ($\mathcal{N}(0, 10^{-3})$). At the start of training, the model outputs $\Delta_{mit} \approx 0$, which acts as an identity pass-through ($\hat{E}_{mit} \approx E_{raw}$). Training smoothly refines the correction from zero rather than guessing wildly.
+3. **Mathematically Bounded Correction ($\pm \alpha$):** The scalar output is bounded via hyperbolic tangent: $\Delta_{mit} = \alpha \cdot \tanh(O_{raw})$. The network is physically restricted from applying a correction larger than the hardware-tuned bound $\alpha$ (e.g., $\alpha=0.2$ for IBM transmons vs. $\alpha=1.0$ for severe NMR dephasing).
+4. **Physical Pauli Projection ($[-1, 1]$):** The final clamping operation guarantees that no prediction can violate the fundamental laws of quantum mechanics.
 
 ---
 
