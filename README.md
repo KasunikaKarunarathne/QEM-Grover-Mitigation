@@ -29,44 +29,24 @@ We introduce a **Two-Tower Neural Network** that acts as an intelligent, instant
 
 ```mermaid
 flowchart TD
-    subgraph Phase1 ["1. One-Time Hardware Calibration"]
-        HW["Physical Quantum Hardware<br/>(IBM Kingston / SpinQ Gemini)"]
-        QPT["Quantum Process Tomography (QPT)"]
-        CHOI["576D Choi Noise Fingerprint<br/>(Basis Gates: H, X, CZ)"]
-        HW -->|Run Basis Gates| QPT
-        QPT -->|Choi Isomorphism| CHOI
+    subgraph Phase1 ["1. Profile Hardware (One-Time)"]
+        QPU["Physical Quantum Computer<br/>(IBM Superconducting / SpinQ NMR)"] -->|One-Time Calibration| CALIB["Quantum Channel Tomography"]
+        CALIB --> NOISE_MAP["Hardware Noise Fingerprint<br/>(Captures Real Device Error Profile)"]
     end
 
-    subgraph Phase2 ["2. Zero-QPU Classical Training (Offline)"]
-        AUG["CPTP Synthetic Data Augmentation<br/>(Simulates Realistic Drift)"]
-        CIRCUITS["500 Diverse Quantum Circuits<br/>(Grover & Random Subroutines)"]
-        SIM["Classical Statevector Simulation<br/>(Ideal Ground Truth Target)"]
-        TOWER_A["Tower A: Circuit Topology (8D)<br/>Dense(16) + SiLU -> 16D Latent"]
-        TOWER_B["Tower B: Hardware Physics (576D)<br/>Dense(4) + Tanh -> 4D Latent"]
-        FUSION["Latent Feature Fusion (20D)<br/>Dense(8) + SiLU -> Raw Scalar"]
-        BOUNDED["Safe Bounded Residual Head<br/>Output Clamped to [-1, 1]"]
-
-        CHOI -->|Offline Input| AUG
-        AUG --> TOWER_B
-        CIRCUITS --> TOWER_A
-        CIRCUITS --> SIM
-        TOWER_A --> FUSION
-        TOWER_B --> FUSION
-        FUSION --> BOUNDED
+    subgraph Phase2 ["2. Train AI Model (Zero Quantum Cost)"]
+        NOISE_MAP --> NOISE_DRIFT["Simulate Realistic Noise Drift<br/>(Physics-Preserving Augmentation)"]
+        CIRCUITS["Diverse Quantum Circuits<br/>(Grover & Random Subroutines)"] --> AI_MODEL["Two-Tower Neural Network<br/>• Analyzes Circuit Complexity<br/>• Ingests Hardware Noise Profile"]
+        NOISE_DRIFT --> AI_MODEL
+        IDEAL_SIM["Ideal Quantum Simulation<br/>(Target Noise-Free Solution)"] -.->|Supervised Learning| AI_MODEL
     end
 
-    subgraph Phase3 ["3. Fast Live Inference (Post-Processing)"]
-        TARGET["Target Grover Circuit"]
-        RUN["Execute on Physical QPU"]
-        RAW["Noisy Raw Measurement (E_raw)"]
-        MODEL["Trained ML-QEM Model"]
-        MIT["Clean Mitigated Expectation (E_mit)<br/>34% Error Cut (IBM) / 28.8% (NMR)"]
-
-        TARGET --> RUN
-        RUN --> RAW
-        RAW --> MODEL
-        BOUNDED -.->|Model Weights| MODEL
-        MODEL -->|Instant Correction| MIT
+    subgraph Phase3 ["3. Real-Time Mitigation (Live Execution)"]
+        USER_CIRC["Target Grover Search Circuit"] --> RUN_HW["Run on Real Quantum Hardware"]
+        RUN_HW --> RAW_RESULT["Noisy Measurement Result"]
+        RAW_RESULT --> POST_PROC["AI Post-Processor<br/>(Applies Learned Physical Correction)"]
+        AI_MODEL -.->|Deploy Trained Model| POST_PROC
+        POST_PROC --> CLEAN_RESULT["Clean, Error-Mitigated Expectation Value<br/>(Instant Millisecond Post-Processing)"]
     end
 ```
 
